@@ -91,7 +91,9 @@ Local Ltac mytac find_label_frame find_label_ls_frame Heqo :=
         ).
 
   {
-    destruct s; simpl; split; try discriminate; eauto.
+
+    destruct s; simpl; split; try discriminate; eauto;
+        mytac find_label_frame find_label_ls_frame Heqo.
     * destruct (find_label l s1 (Kseq s2 k)) eqn:Heqo;
         mytac find_label_frame find_label_ls_frame Heqo.
         inversion 1; subst;
@@ -116,18 +118,10 @@ Local Ltac mytac find_label_frame find_label_ls_frame Heqo :=
     * destruct (find_label l s1 (Kloop1 s1 s2 k)) eqn:Heqo;
         mytac find_label_frame find_label_ls_frame Heqo.
 
-    * inversion 1.
-      
-      
-      admit. (* destruct (AST.ident_eq l0 l); try congruence.*)
-      
-    * 
-      admit. (* destruct (AST.ident_eq l0 l); try congruence... *)
-    * intros; destruct (ident_eq l0 l);
-        try inversion H;
-        now mytac find_label_frame find_label_ls_frame Heqo.
-    * intros; destruct (ident_eq l0 l); try congruence;
-        now mytac find_label_frame find_label_ls_frame Heqo.
+    * destruct (ident_eq l0 l); try congruence;
+        mytac find_label_frame find_label_ls_frame Heqo.
+    * destruct (ident_eq l0 l); try congruence;
+        mytac find_label_frame find_label_ls_frame Heqo.
   }
 + destruct ls; simpl; split; try discriminate; eauto.
   * destruct (find_label l s (Kseq (seq_of_labeled_statement ls) k)) eqn:Heqo;
@@ -136,8 +130,8 @@ Local Ltac mytac find_label_frame find_label_ls_frame Heqo :=
       mytac find_label_frame find_label_ls_frame Heqo.
   * destruct (find_label l s (Kseq (seq_of_labeled_statement ls) k)) eqn:Heqo;
     mytac find_label_frame find_label_ls_frame Heqo.
-    
-Admitted.
+Qed.    
+
 
 End WITHKFRAME.
 
