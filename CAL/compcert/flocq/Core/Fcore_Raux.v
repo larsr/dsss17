@@ -436,7 +436,8 @@ case n ; intros ; simpl.
 apply refl_equal.
 now rewrite P2R_INR,  INR_IZR_INZ, positive_nat_Z.
 apply Ropp_eq_compat.
-now rewrite <- INR_IPR, P2R_INR.
+try rewrite <- INR_IPR.
+apply P2R_INR.
 Qed.
 
 Theorem Z2R_opp :

@@ -652,7 +652,7 @@ apply Rplus_eq_reg_l with (/2*F2R u)%R.
 apply trans_eq with m.
 unfold m, Rdiv; ring.
 rewrite H; field.
-auto with real.
+try now apply Rgt_not_eq, Rlt_gt; auto with real.
 congruence.
 Qed.
 
