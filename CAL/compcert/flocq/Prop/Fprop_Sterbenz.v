@@ -44,9 +44,9 @@ intros x y Fx Fy Hxy.
 destruct (Req_dec (x + y) 0) as [Zxy|Zxy].
 rewrite Zxy.
 apply generic_format_0.
-destruct (Req_dec x R0) as [Zx|Zx].
+destruct (Req_dec x 0%R) as [Zx|Zx].
 now rewrite Zx, Rplus_0_l.
-destruct (Req_dec y R0) as [Zy|Zy].
+destruct (Req_dec y 0%R) as [Zy|Zy].
 now rewrite Zy, Rplus_0_r.
 revert Hxy.
 destruct (ln_beta beta x) as (ex, Ex). simpl.
@@ -95,9 +95,9 @@ Theorem generic_format_plus_weak :
   format (x + y)%R.
 Proof.
 intros x y Fx Fy Hxy.
-destruct (Req_dec x R0) as [Zx|Zx].
+destruct (Req_dec x 0%R) as [Zx|Zx].
 now rewrite Zx, Rplus_0_l.
-destruct (Req_dec y R0) as [Zy|Zy].
+destruct (Req_dec y 0%R) as [Zy|Zy].
 now rewrite Zy, Rplus_0_r.
 apply generic_format_plus ; try assumption.
 apply Rle_lt_trans with (1 := Hxy).
@@ -133,6 +133,7 @@ assert (Hy0: (0 <= y)%R).
 apply Rplus_le_reg_r with y.
 apply Rle_trans with x.
 now rewrite Rplus_0_l.
+replace 2%R with (1+1)%R in Hxy2 by auto.
 now rewrite Rmult_plus_distr_r, Rmult_1_l in Hxy2.
 rewrite Rabs_pos_eq with (1 := Hy0).
 rewrite Rabs_pos_eq.

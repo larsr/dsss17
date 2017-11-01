@@ -1,3 +1,4 @@
+Require Import FunInd.
 Require Import Coq.Program.Basics.
 Require Import LogicalRelations.
 Require Import SimulationRelation.

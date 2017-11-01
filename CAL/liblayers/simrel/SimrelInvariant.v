@@ -1,3 +1,4 @@
+Require Import FunInd.
 Require Import SimrelDefinition.
 Require Import SimrelCategory.
 

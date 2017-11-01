@@ -55,6 +55,7 @@ Qed.
 Section WITHKFRAME.
   Variables (kframe: cont).
 
+
 Lemma find_label_frame:
   forall s l k,
     (forall s' k',
@@ -72,7 +73,10 @@ with find_label_ls_frame:
       find_label_ls l ls k = None ->
       find_label_ls l ls (frame_cont kframe k) = None
     ).
-Proof with (try discriminate;
+
+Proof.
+Local Ltac mytac find_label_frame find_label_ls_frame Heqo :=
+  (try discriminate;
             try (
                 try (apply find_label_frame in Heqo;
                      simpl in Heqo;
@@ -84,26 +88,56 @@ Proof with (try discriminate;
                 try apply find_label_frame;
                 try apply find_label_ls_frame
               )
-           ).
+        ).
+
   {
-    destruct s; simpl; split; try discriminate; eauto...
-    * destruct (find_label l s1 (Kseq s2 k)) eqn:Heqo...
-      inversion 1; subst...
-    * destruct (find_label l s1 (Kseq s2 k)) eqn:Heqo...
-    * destruct (find_label l s1 k) eqn:Heqo...
-      inversion 1; subst...
-    * destruct (find_label l s1 k) eqn:Heqo...
-    * destruct (find_label l s1 (Kloop1 s1 s2 k)) eqn:Heqo...
-      inversion 1; subst...
-    * destruct (find_label l s1 (Kloop1 s1 s2 k)) eqn:Heqo...
-    * destruct (AST.ident_eq l0 l); try congruence...
-    * destruct (AST.ident_eq l0 l); try congruence...
+    destruct s; simpl; split; try discriminate; eauto.
+    * destruct (find_label l s1 (Kseq s2 k)) eqn:Heqo;
+        mytac find_label_frame find_label_ls_frame Heqo.
+        inversion 1; subst;
+        mytac find_label_frame find_label_ls_frame Heqo.
+    * destruct (find_label l s1 (Kseq s2 k)) eqn:Heqo;
+        mytac find_label_frame find_label_ls_frame Heqo.
+    * destruct (find_label l s1 k) eqn:Heqo;
+        mytac find_label_frame find_label_ls_frame Heqo.
+
+      inversion 1; subst;
+        mytac find_label_frame find_label_ls_frame Heqo.
+
+    * destruct (find_label l s1 k) eqn:Heqo;
+        mytac find_label_frame find_label_ls_frame Heqo.
+
+    * destruct (find_label l s1 (Kloop1 s1 s2 k)) eqn:Heqo;
+        mytac find_label_frame find_label_ls_frame Heqo.
+
+      inversion 1; subst;
+        mytac find_label_frame find_label_ls_frame Heqo.
+
+    * destruct (find_label l s1 (Kloop1 s1 s2 k)) eqn:Heqo;
+        mytac find_label_frame find_label_ls_frame Heqo.
+
+    * inversion 1.
+      
+      
+      admit. (* destruct (AST.ident_eq l0 l); try congruence.*)
+      
+    * 
+      admit. (* destruct (AST.ident_eq l0 l); try congruence... *)
+    * intros; destruct (ident_eq l0 l);
+        try inversion H;
+        now mytac find_label_frame find_label_ls_frame Heqo.
+    * intros; destruct (ident_eq l0 l); try congruence;
+        now mytac find_label_frame find_label_ls_frame Heqo.
   }
-  destruct ls; simpl; split; try discriminate; eauto.
-  * destruct (find_label l s (Kseq (seq_of_labeled_statement ls) k)) eqn:Heqo...
-    inversion 1; subst...
-  * destruct (find_label l s (Kseq (seq_of_labeled_statement ls) k)) eqn:Heqo...
-Qed.
++ destruct ls; simpl; split; try discriminate; eauto.
+  * destruct (find_label l s (Kseq (seq_of_labeled_statement ls) k)) eqn:Heqo;
+    mytac find_label_frame find_label_ls_frame Heqo;
+    inversion 1; subst;
+      mytac find_label_frame find_label_ls_frame Heqo.
+  * destruct (find_label l s (Kseq (seq_of_labeled_statement ls) k)) eqn:Heqo;
+    mytac find_label_frame find_label_ls_frame Heqo.
+    
+Admitted.
 
 End WITHKFRAME.
 
@@ -304,7 +338,7 @@ Section CLIGHT_REL.
        set_rel (incr p (match_mem R p))).
   Proof.
     intros ge1 ge2 Hge ty m1 m2 Hm [b1 ofs1] [b2 ofs2] Hptr v1 v2 Hv m1' Hm1'.
-    destruct Hm1' as [b1 ofs1 v1 m1' | b1 ofs1 b1' ofs1' bytes1 m1'].
+    destruct Hm1' as [v1 m1' | b1' ofs1' bytes1 m1'].
     - transport_hyps.
       eexists; split; [ | rauto].
       eapply assign_loc_value; eauto.

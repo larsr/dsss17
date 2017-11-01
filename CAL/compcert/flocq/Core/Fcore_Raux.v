@@ -403,7 +403,7 @@ Definition Z2R n :=
   match n with
   | Zpos p => P2R p
   | Zneg p => Ropp (P2R p)
-  | Z0 => R0
+  | Z0 => 0%R
   end.
 
 Theorem P2R_INR :
@@ -434,9 +434,9 @@ Proof.
 intro.
 case n ; intros ; simpl.
 apply refl_equal.
-apply P2R_INR.
+now rewrite P2R_INR,  INR_IZR_INZ, positive_nat_Z.
 apply Ropp_eq_compat.
-apply P2R_INR.
+now rewrite <- INR_IPR, P2R_INR.
 Qed.
 
 Theorem Z2R_opp :
@@ -1179,7 +1179,7 @@ intros x Hx.
 unfold Ztrunc.
 case Rlt_bool_spec ; intro H.
 elim Rlt_irrefl with x.
-now apply Rlt_le_trans with R0.
+now apply Rlt_le_trans with 0%R.
 apply refl_equal.
 Qed.
 
@@ -1193,9 +1193,10 @@ unfold Ztrunc.
 case Rlt_bool_spec ; intro H.
 apply refl_equal.
 rewrite (Rle_antisym _ _ Hx H).
-fold (Z2R 0).
-rewrite Zceil_Z2R.
-apply Zfloor_Z2R.
+
+replace 0%R with (Z2R (Z.of_nat 0)).
+rewrite Zfloor_Z2R, Zceil_Z2R; auto.
+apply Z2R_IZR.
 Qed.
 
 Theorem Ztrunc_le :
@@ -1290,7 +1291,7 @@ intros x Hx.
 unfold Zaway.
 case Rlt_bool_spec ; intro H.
 elim Rlt_irrefl with x.
-now apply Rlt_le_trans with R0.
+now apply Rlt_le_trans with 0%R.
 apply refl_equal.
 Qed.
 
@@ -1304,9 +1305,10 @@ unfold Zaway.
 case Rlt_bool_spec ; intro H.
 apply refl_equal.
 rewrite (Rle_antisym _ _ Hx H).
-fold (Z2R 0).
-rewrite Zfloor_Z2R.
-apply Zceil_Z2R.
+
+replace 0%R with (Z2R (Z.of_nat 0)).
+rewrite Zfloor_Z2R, Zceil_Z2R; auto.
+apply Z2R_IZR.
 Qed.
 
 Theorem Zaway_le :
@@ -1387,7 +1389,7 @@ intros x y Zy.
 generalize (Z_div_mod_eq_full x y Zy).
 intros Hx.
 rewrite Hx at 1.
-assert (Zy': Z2R y <> R0).
+assert (Zy': Z2R y <> 0%R).
 contradict Zy.
 now apply eq_Z2R.
 unfold Rdiv.
@@ -1456,7 +1458,7 @@ Definition bpow e :=
   match e with
   | Zpos p => Z2R (Zpower_pos r p)
   | Zneg p => Rinv (Z2R (Zpower_pos r p))
-  | Z0 => R1
+  | Z0 => 1%R
   end.
 
 Theorem Z2R_Zpower_pos :
@@ -1872,7 +1874,7 @@ apply bpow_ge_0.
 Qed.
 
 Theorem ln_beta_mult_bpow :
-  forall x e, x <> R0 ->
+  forall x e, x <> 0%R ->
   (ln_beta (x * bpow e) = ln_beta x + e :>Z)%Z.
 Proof.
 intros x e Zx.
@@ -1895,7 +1897,7 @@ Qed.
 
 Theorem ln_beta_le_bpow :
   forall x e,
-  x <> R0 ->
+  x <> 0%R ->
   (Rabs x < bpow e)%R ->
   (ln_beta x <= e)%Z.
 Proof.
@@ -2048,9 +2050,10 @@ assert (Haxy : (Rabs (x + y) < bpow (ex + 1))%R).
     + rewrite Rabs_right.
       { apply Rle_trans with (x + x)%R; [now apply Rplus_le_compat_l|].
         rewrite Rabs_right.
-        { rewrite Rmult_plus_distr_r.
-          rewrite Rmult_1_l.
-          now apply Rle_refl. }
+        { replace (x + x)%R with(1*x + 1*x)%R.
+          rewrite <- Rmult_plus_distr_r.
+          auto using Rle_refl.
+          now rewrite Rmult_1_l. }
         now apply Rgt_ge. }
       apply Rgt_ge.
       rewrite <- (Rplus_0_l 0).

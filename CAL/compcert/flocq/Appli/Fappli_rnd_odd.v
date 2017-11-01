@@ -653,8 +653,7 @@ apply trans_eq with m.
 unfold m, Rdiv; ring.
 rewrite H; field.
 auto with real.
-apply Rgt_not_eq, Rlt_gt; auto with real.
-unfold m; rewrite <- H0; field.
+congruence.
 Qed.
 
 
@@ -684,7 +683,8 @@ apply Rlt_le_trans with (bpow (fexp e)*1)%R.
 2: right; ring.
 unfold Rdiv; apply Rmult_lt_compat_l.
 apply bpow_gt_0.
-rewrite <- Rinv_1 at 3.
+Check Rinv_lt.
+rewrite <- Rinv_1.
 apply Rinv_lt; auto with real.
 now apply He, Rgt_not_eq.
 apply exp_small_round_0_pos with beta (Zfloor) x...

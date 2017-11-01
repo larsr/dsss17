@@ -1,3 +1,4 @@
+Require Import FunInd.
 Require Import compcert.lib.Coqlib.
 Require Import compcert.common.Values.
 Require Import compcert.common.AST.

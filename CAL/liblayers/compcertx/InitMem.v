@@ -1,4 +1,5 @@
 Require Import Relations.
+Require Import FunInd.
 Require Import compcert.lib.Coqlib.
 Require Import compcert.lib.Maps.
 Require Import compcert.common.AST.

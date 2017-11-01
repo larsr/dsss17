@@ -39,7 +39,7 @@ Inductive full_float :=
 Definition FF2R beta x :=
   match x with
   | F754_finite s m e => F2R (Float beta (cond_Zopp s (Zpos m)) e)
-  | _ => R0
+  | _ => 0%R
   end.
 
 End AnyRadix.
@@ -104,7 +104,7 @@ Definition B2FF x :=
 Definition B2R f :=
   match f with
   | B754_finite s m e _ => F2R (Float radix2 (cond_Zopp s (Zpos m)) e)
-  | _ => R0
+  | _ => 0%R
   end.
 
 Theorem FF2R_B2FF :
@@ -260,11 +260,11 @@ revert Heq. clear.
 case sx ; case sy ; try easy ;
   intros Heq ; apply False_ind ; revert Heq.
 apply Rlt_not_eq.
-apply Rlt_trans with R0.
+apply Rlt_trans with 0%R.
 now apply F2R_lt_0_compat.
 now apply F2R_gt_0_compat.
 apply Rgt_not_eq.
-apply Rgt_trans with R0.
+apply Rgt_trans with 0%R.
 now apply F2R_gt_0_compat.
 now apply F2R_lt_0_compat.
 assert (mx = my /\ ex = ey).
@@ -1028,7 +1028,7 @@ discriminate.
 unfold canonic.
 now rewrite <- H3.
 elim Rgt_not_eq with (2 := H3).
-apply Rlt_trans with R0.
+apply Rlt_trans with 0%R.
 now apply F2R_lt_0_compat.
 now apply F2R_gt_0_compat.
 rewrite <- Hr.
@@ -1036,7 +1036,7 @@ apply generic_format_abs...
 apply generic_format_round...
 (* . not m1' < 0 *)
 elim Rgt_not_eq with (2 := Hr).
-apply Rlt_le_trans with R0.
+apply Rlt_le_trans with 0%R.
 now apply F2R_lt_0_compat.
 apply Rabs_pos.
 (* *)
@@ -1714,7 +1714,7 @@ Definition Bdiv div_nan m x y :=
 
 Theorem Bdiv_correct :
   forall div_nan m x y,
-  B2R y <> R0 ->
+  B2R y <> 0%R ->
   if Rlt_bool (Rabs (round radix2 fexp (round_mode m) (B2R x / B2R y))) (bpow radix2 emax) then
     B2R (Bdiv div_nan m x y) = round radix2 fexp (round_mode m) (B2R x / B2R y) /\
     is_finite (Bdiv div_nan m x y) = is_finite x /\
@@ -1866,7 +1866,7 @@ intros ; zify ; subst.
 omega.
 (* . mz < 0 *)
 elim Rlt_not_le  with (1 := proj2 (inbetween_float_bounds _ _ _ _ _ Bz)).
-apply Rle_trans with R0.
+apply Rle_trans with 0%R.
 apply F2R_le_0_compat.
 now case mz.
 apply sqrt_ge_0.
