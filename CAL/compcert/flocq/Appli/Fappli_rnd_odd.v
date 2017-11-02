@@ -684,7 +684,7 @@ apply Rlt_le_trans with (bpow (fexp e)*1)%R.
 unfold Rdiv; apply Rmult_lt_compat_l.
 apply bpow_gt_0.
 Check Rinv_lt.
-rewrite <- Rinv_1.
+(rewrite <- Rinv_1 at 3 || rewrite <- Rinv_1).
 apply Rinv_lt; auto with real.
 now apply He, Rgt_not_eq.
 apply exp_small_round_0_pos with beta (Zfloor) x...
